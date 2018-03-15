@@ -1,0 +1,1249 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>JS tips and tricks</title>
+  <style type="text/css">
+    /**
+ * Styles inspirated by BeerJS Santiago Theme
+ * website: http://www.beerjs.cl
+ * repository: https://github.com/juanbrujo/cleaver-beerjs
+ * License: MIT LICENSE;
+ */
+
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900);
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+body {
+  font-family: "Source Sans Pro", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 100%;
+  color: #191919;
+  background-color: #f1f1f1;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#slide-1 {
+  color: #978105;
+  background: #F8DC3D;
+  background-size: cover;
+}
+
+.center {
+  text-align: center;
+}
+
+img.badge {
+  height: 128px;
+  width: 128px !important;
+  border-radius: 50% !important;
+}
+
+.slides {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.slides.active .slide:not(.hidden) {
+  border: 22px solid red;
+}
+
+.slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  cursor: pointer;
+  display: none;
+}
+
+.slides.active .slide:hover .slide-overlay::before {
+  content: '▶';
+  text-align: center;
+  line-height: 300px;
+  font-size: 200px;
+  color: #fff;
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.slides.active .slide:hover .slide-overlay{
+  display: block;
+  background: rgba(0,0,0,0.5);
+}
+.slide-wrapper {
+  margin: 7px;
+  -webkit-transition: all 250ms;
+  transition: all 250ms;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+  z-index: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-color: #F1F1F4;
+  display: table;
+}
+
+.slide-content {
+  position: relative;
+  z-index: 2;
+  opacity: 1;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 200%;
+  font-weight: 200;
+  line-height: 1.375;
+  overflow: hidden;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.slide-content img {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.author-slide {
+  background-color: #2C3E50;
+  color: #f1f1f1;
+}
+
+.controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 3;
+}
+
+.overview {
+  display: inline-block;
+  float: left;
+  color: rgba(135, 135, 135, .5);
+  margin-right: 15px;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.overview:hover {
+  color: #000;
+  cursor: pointer;
+}
+.arrow {
+  float: left;
+  height: 0;
+  width: 0;
+  margin-right: 15px;
+  border: 15px solid rgba(135, 135, 135, .5);
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+.arrow:hover {
+  cursor: pointer;
+}
+
+.prev {
+  border-top-color: transparent;
+  border-right-width: 25px;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-left-width: 0;
+}
+.prev:hover {
+  border-right-color: #000;
+}
+
+.next {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-right-width: 0;
+  border-bottom-color: transparent;
+  border-left-width: 25px;
+}
+.prev:hover {
+  border-left-color: #000;
+}
+
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+h1 {
+  font-size: 200%;
+  text-align: center;
+  line-height: 1.2;
+}
+h2 {
+  margin: 5px 0;
+  font-size: 100%;
+  font-weight: 200;
+  text-align: center;
+  line-height: 1.2;
+}
+h3 {
+  margin: 0;
+  padding-bottom: 15px;
+  font-size: 140%;
+  line-height: 1.2;
+  border-bottom: 1px ridge #191919;
+}
+ul {
+  font-weight: 200;
+  line-height: 1.375;
+  padding: 20px 0 0 60px;
+}
+blockquote {
+  padding-left: 20px;
+  margin-left: 0;
+  background: #fff;
+  border-left: 5px solid #272822;
+  border-radius: 0 3px 3px 0;
+}
+blockquote p {
+  padding: .5em;
+  color: #272822;
+}
+.left {
+  float: left;
+  width: 48%;
+}
+
+.right {
+  float: right;
+  width: 48%;
+}
+
+.author h1 {
+  margin-bottom: 30px;
+  font-size: 170%;
+  font-weight: 200;
+  text-align: center;
+}
+
+.author h3 {
+  font-size: 95%;
+  font-weight: 100;
+  text-align: center;
+  border: none;
+}
+
+.author h3.twitter::before {
+  content: 'Twitter: ';
+}
+
+.author h3.github::before {
+  content: 'Github: ';
+}
+
+.author h3.email::before {
+  content: 'Email: ';
+}
+
+.author h3.url::before {
+  content: 'Web: ';
+}
+
+a {
+  text-decoration: none;
+  color: #ff9c08;
+}
+
+a:hover {
+  color: #F8DC3D;
+  border-bottom: 1px solid #F8DC3D;
+}
+
+hr {
+  border: 1px solid #272822;
+}
+
+pre {
+  font-size: 75%;
+  line-height: 1.3;
+  background-color: rgba(0,0,0,.5);
+}
+
+table td,
+table th {
+  padding-right: 3em;
+  text-align: left;
+}
+
+.progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  z-index: 2;
+}
+
+.progress-bar {
+  height: 3px;
+  width: 0;
+  background-color: #ff9c08;
+  -webkit-transition: width .15s ease-out;
+  transition: width .15s ease-out;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Code Highlighting */
+code {
+  padding: .1em .35em;
+  font-family: 'Inconsolata';
+  background-color: #fafafa;
+  border-radius: 3px;
+}
+
+pre code {
+  display: block;
+  padding: .5em;
+  font-family: 'Inconsolata';
+  font-weight: 400;
+  overflow-y: hidden;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+code.lang-bash-blank{
+  background: #000;
+  color: #fff!important;
+}
+code.lang-bash-blank-small{
+  background: #000;
+  color: #fff!important;
+  font-size: 0.45em;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 6px;
+  box-shadow: inset 0 -4px 0 #bbb;
+}
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* Responsiveness */
+@media (max-width: 850px) {
+  body {
+    font-size: 70%;
+  }
+
+  .slide {
+    padding: 30px;
+  }
+
+  .slide-content {
+    width: auto;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 3px;
+  }
+
+  .prev,
+  .prev:hover {
+    border-right-color: rgba(135, 135, 135, .5);
+  }
+
+  .next,
+  .next:hover {
+    border-left-color: rgba(135, 135, 135, .5);
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    overflow: hidden;
+    font-size: 50%;
+  }
+
+  .slide {
+    padding: 10px;
+  }
+
+  ul {
+    padding-left: 25px;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    size: letter;
+  }
+
+  .hidden {
+    display: inline;
+  }
+
+  html {
+    height: 100%;
+    width: 100%;
+    overflow: visible;
+  }
+
+  body {
+    float: none !important;
+    padding: 0;
+    margin: 0 auto !important;
+    overflow: visible;
+    font-size: 52%;
+    background: none !important;
+    border: 0;
+  }
+
+  .progress,
+  .controls {
+    display: none;
+  }
+
+  .slide {
+    position: static;
+  }
+
+  .slide-content {
+    margin-top: 0;
+    margin-bottom: 40px;
+    height: 3.5in;
+    overflow: visible;
+    border: 1px solid #222;
+
+  }
+
+  .slide:nth-child(even) {
+    page-break-before: always;
+  }
+}
+
+.u-alignCenter {
+	text-align: center;
+}
+  </style>
+    <script async src="http://localhost:35729/livereload.js"></script>
+</head>
+<body>
+    <div class="progress">
+    <div class="progress-bar"></div>
+  </div>
+
+<div class="slides">
+    <div class="slide-wrapper">
+      <div class="slide" id="slide-1">
+        <div data-id="1" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="js-tips-and-tricks">JS tips and tricks</h1>
+<h2 id="cosas-feas-y-otras-peor-y-como-lidiar-con-ellas">Cosas feas y otras peor, y como lidiar con ellas</h2>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-2">
+        <div data-id="2" class="slide-overlay"></div>
+        <section class="slide-content"><p><img src="img/me.png" alt="me">
+<code>`</code></p>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-3">
+        <div data-id="3" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-array-from-">1. Array.from()</h1>
+<h2 id="convirtiendo-a-verdaderos-array">Convirtiendo a verdaderos array</h2>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-4">
+        <div data-id="4" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-1-array-from-">1.1 Array.from()</h1>
+<h2 id="generar-una-lista-de-selectores-html">Generar una lista de selectores html</h2>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>uno<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>dos<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>tres<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>cuatro<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span>cinco<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden  " id="slide-5">
+        <div data-id="5" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-2-array-from-">1.2 Array.from()</h1>
+<h2 id="buscar-todos-los-nodos-con-el-selector-li-del-documento">Buscar todos los nodos con el selector li del documento</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> lis = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'li'</span>)
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-6">
+        <div data-id="6" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-3-hacer-algo-con-estos-nodos-">1.3 Hacer algo con estos nodos (?)</h1>
+<h2 id="funciones-es5-">funciones, ES5... (?)</h2>
+<pre><code class="lang-javascript">lis.length
+lis.values
+lis.keys
+
+lis.forEach(<span class="hljs-function">(<span class="hljs-params">li, k</span>) =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(k, li.textContent)
+})
+
+<span class="hljs-keyword">for</span> (li <span class="hljs-keyword">of</span> lis) {
+  li.addEventListener...
+}
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-7">
+        <div data-id="7" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-4-usando-array-prototype-slice-call-">1.4 Usando Array.prototype.slice.call()</h1>
+<h2 id="el-viejo-slice-y-call-de-es5">El viejo slice y call() de ES5</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> lis = <span class="hljs-built_in">Array</span>.prototype.slice.call(lis)
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-8">
+        <div data-id="8" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-5-aplicando-array-from-">1.5 Aplicando Array.from() ✨</h1>
+<h2 id="convirtiendo-a-un-array-de-verdad-huemul-trusted-">Convirtiendo a un array de verdad :huemul-trusted:</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> lis = <span class="hljs-built_in">Array</span>.from(lis) <span class="hljs-comment">// la magia</span>
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-9">
+        <div data-id="9" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="1-6-aplicar-metodos-de-un-array-normal">1.6 Aplicar metodos de un array normal</h1>
+<h2 id="map-find-filter-reduce-200-100-lo-que-">map, find, filter, reduce... 200, 100 lo que...</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">let</span> lis = <span class="hljs-built_in">Array</span>.from(lis) <span class="hljs-comment">// la magia</span>
+
+<span class="hljs-keyword">const</span> find = lis.find(<span class="hljs-function"><span class="hljs-params">li</span> =&gt;</span> li.textContent == <span class="hljs-string">'dos'</span>)
+<span class="hljs-keyword">const</span> map = lis.map(<span class="hljs-function"><span class="hljs-params">li</span> =&gt;</span> li.textContent + <span class="hljs-string">' JS es feo'</span>)
+
+<span class="hljs-built_in">console</span>.log(find)
+<span class="hljs-built_in">console</span>.log(map)
+...
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-10">
+        <div data-id="10" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-new-set-">2. new Set() 🌈</h1>
+<h2 id="usando-el-nuevo-objeto-set-para-filtrar">Usando el nuevo objeto Set() para filtrar</h2>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-11">
+        <div data-id="11" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-1-filtrando-un-arreglo-simple-a-la-antigua">2.1. Filtrando un arreglo simple a la antigua</h1>
+<h2 id="removiendo-items-con-filter-indexof">Removiendo items con filter + indexOf</h2>
+<pre><code class="lang-javascript">uniq = <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> {
+  <span class="hljs-keyword">return</span> data.filter(<span class="hljs-function">(<span class="hljs-params">elem, pos, arr</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> arr.indexOf(elem) == pos
+  })
+}
+
+uniq([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>]) <span class="hljs-comment">// [1,2,3]</span>
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-12">
+        <div data-id="12" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-2-ahora-con-set-">2.2. Ahora con Set() ✨</h1>
+<h2 id="new-set-">new Set([...])</h2>
+<pre><code class="lang-javascript">[...new <span class="hljs-built_in">Set</span>([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>])]
+
+<span class="hljs-comment">// (3) [1, 2, 3]</span>
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-13">
+        <div data-id="13" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-3-filtrando-un-arreglo-de-objetos-">2.3. Filtrando un arreglo de objetos? 🤔</h1>
+<h2 id="mapear-y-filtrar-un-arreglo-normal">Mapear y filtrar un arreglo normal</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> modas = [
+  {<span class="hljs-attr">id</span>:<span class="hljs-number">0</span>, <span class="hljs-attr">name</span>:<span class="hljs-string">'BEM'</span>},
+  {<span class="hljs-attr">id</span>:<span class="hljs-number">1</span>, <span class="hljs-attr">name</span>:<span class="hljs-string">'MutableCSS'</span>},
+  {<span class="hljs-attr">id</span>:<span class="hljs-number">2</span>, <span class="hljs-attr">name</span>:<span class="hljs-string">'Styled Components'</span>},
+  {<span class="hljs-attr">id</span>:<span class="hljs-number">3</span>, <span class="hljs-attr">name</span>:<span class="hljs-string">'MutableCSS'</span>},
+  {<span class="hljs-attr">id</span>:<span class="hljs-number">4</span>, <span class="hljs-attr">name</span>:<span class="hljs-string">'BEM'</span>},
+]
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-14">
+        <div data-id="14" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-3-filtrando-a-la-antigua-de-nuevo">2.3. Filtrando a la antigua de nuevo</h1>
+<h2 id="filter-indexof-">filter() + indexOf()</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> filterNormal = <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> data
+            .filter(<span class="hljs-function">(<span class="hljs-params">obj, pos, arr</span>) =&gt;</span> {
+              <span class="hljs-keyword">return</span> arr.map(<span class="hljs-function"><span class="hljs-params">mapObj</span> =&gt;</span> mapObj.name).indexOf(obj.name) === pos
+            })
+
+<span class="hljs-built_in">console</span>.time()
+<span class="hljs-keyword">const</span> res = filterNormal(modas)
+<span class="hljs-built_in">console</span>.timeEnd()
+
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-15">
+        <div data-id="15" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-3-ahora-filtrando-y-construyendo-con-set">2.3. Ahora filtrando y construyendo con Set</h1>
+<h2 id="a-ver-a-ver-">A ver, a ver...</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> filterSet = <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> [...new <span class="hljs-built_in">Set</span>(data.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.stringify({ <span class="hljs-attr">name</span>: item.name })
+  })
+)].map(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> <span class="hljs-built_in">JSON</span>.parse(s))
+
+<span class="hljs-built_in">console</span>.time()
+<span class="hljs-keyword">const</span> res = filterSet(modas)
+<span class="hljs-built_in">console</span>.timeEnd()
+
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-16">
+        <div data-id="16" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-4-filternormal-vs-filterset">2.4 FilterNormal VS FilterSet</h1>
+<h2 id="console-time-">console.time(😱)</h2>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-17">
+        <div data-id="17" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-5-filternormal-vs-filterset">2.5 FilterNormal VS FilterSet</h1>
+<h2 id="resultados-filtrando-1000-registros-">Resultados filtrando 1000 registros ⏰</h2>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-18">
+        <div data-id="18" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="2-6-resultados">2.6 Resultados</h1>
+<pre><code class="lang-javascript">
+filterNormal(modas)
+<span class="hljs-comment">// 25.985107421875ms </span>
+
+filterSet(modas)
+<span class="hljs-comment">// 1.395263671875ms</span>
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-19">
+        <div data-id="19" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="dynamic-import">Dynamic import</h1>
+<h2 id="import-promise-">import + promise ✨</h2>
+<blockquote>
+<p><a href="https://github.com/tc39/proposal-dynamic-import">https://github.com/tc39/proposal-dynamic-import</a></p>
+</blockquote>
+<blockquote>
+<p>This repository contains a proposal for adding a &quot;function-like&quot; import() module loading syntactic form to JavaScript. It is currently in stage 3 of the TC39 process.</p>
+</blockquote>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-20">
+        <div data-id="20" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="que-puedo-hacer-con-dynamic-import-">Que puedo hacer con dynamic import? 🤔</h1>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-21">
+        <div data-id="21" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="dynamic-import">Dynamic import</h1>
+<h2 id="modulos-que-son-pages-bajo-demanda">Modulos que son pages, bajo demanda</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> page = <span class="hljs-keyword">await</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">'./pages/about'</span>);
+
+<span class="hljs-comment">// render page</span>
+page.render();
+</code></pre>
+<h3 id="para-usar-async-await">Para usar async/await</h3>
+<p>babel-polyfill o babel-runtime + babel-plugin-transform-runtime</p>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-22">
+        <div data-id="22" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="dynamic-import">Dynamic import</h1>
+<h2 id="ejemplo-un-poco-mas-cientifico-">Ejemplo un poco mas cientifico 👨‍🔬</h2>
+<pre><code class="lang-html"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">nav</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"books.html"</span> <span class="hljs-attr">data-entry-module</span>=<span class="hljs-string">"books"</span>&gt;</span>Books<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"movies.html"</span> <span class="hljs-attr">data-entry-module</span>=<span class="hljs-string">"movies"</span>&gt;</span>Movies<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"video-games.html"</span> <span class="hljs-attr">data-entry-module</span>=<span class="hljs-string">"video-games"</span>&gt;</span>Video Games<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>Content will load here!<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+  <span class="hljs-keyword">const</span> main = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">"main"</span>);
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> link <span class="hljs-keyword">of</span> <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"nav &gt; a"</span>)) {
+    link.addEventListener(<span class="hljs-string">"click"</span>, e =&gt; {
+      e.preventDefault();
+
+      <span class="hljs-keyword">import</span>(<span class="hljs-string">`./section-modules/<span class="hljs-subst">${link.dataset.entryModule}</span>.js`</span>)
+        .then(<span class="hljs-function"><span class="hljs-params">module</span> =&gt;</span> {
+          <span class="hljs-built_in">module</span>.loadPageInto(main);
+        })
+        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+          main.textContent = err.message;
+        });
+    });
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-23">
+        <div data-id="23" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="dynamic-import">Dynamic import</h1>
+<h2 id="en-la-actualidad">En la actualidad</h2>
+<h3 id="code-splitting">Code Splitting</h3>
+<p>Es parte del core de parcel
+<a href="https://parceljs.org/code_splitting.html">https://parceljs.org/code_splitting.html</a></p>
+<h3 id="vue-router">Vue Router</h3>
+<p><a href="https://router.vuejs.org/en/advanced/lazy-loading.html">https://router.vuejs.org/en/advanced/lazy-loading.html</a>
+<a href="https://babeljs.io/docs/plugins/syntax-dynamic-import">https://babeljs.io/docs/plugins/syntax-dynamic-import</a></p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> Home = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-comment">/* webpackChunkName: "home" */</span> <span class="hljs-string">'./Home.vue'</span>);
+<span class="hljs-keyword">const</span> routes = [
+  { <span class="hljs-attr">path</span>: <span class="hljs-string">'/'</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">'home'</span>, <span class="hljs-attr">component</span>: Home },
+];
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-24">
+        <div data-id="24" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="postcss-tips">PostCSS tips</h1>
+<ul>
+<li>Evitar SASS u otros pre-procesadores, (apoyar la nueva especificación )</li>
+<li>PostCSS es como el Babel de CSS</li>
+<li>Compila a CSS3 o CSS4 nativo</li>
+<li>Puedes utilizar cosas experimentales de forma segura</li>
+<li>Todos se convierte a través de modulos JS</li>
+</ul>
+<ul>
+<li>👉 <a href="https://github.com/postcss/postcss-cli">https://github.com/postcss/postcss-cli</a> <strong>CLI</strong></li>
+<li>👉 <a href="http://cssnext.io">http://cssnext.io</a> <strong>- Use tomorrow’s CSS syntax, today.</strong></li>
+</ul>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden  " id="slide-25">
+        <div data-id="25" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="postcss">PostCSS</h1>
+<h2 id="testear-componentes">Testear componentes</h2>
+<p><a href="https://raulghm.github.io/cata-variables/test">https://raulghm.github.io/cata-variables/test</a></p>
+<p>colors.css</p>
+<pre><code class="lang-css"><span class="hljs-selector-pseudo">:root</span> {
+
+  <span class="hljs-comment">/* Colors */</span>
+
+  <span class="hljs-attribute">--color-white</span>: <span class="hljs-number">#fff</span>;
+  <span class="hljs-attribute">--color-black</span>: <span class="hljs-number">#111</span>;
+}
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-26">
+        <div data-id="26" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="postcss">PostCSS</h1>
+<h2 id="testear-componentes">Testear componentes</h2>
+<p>Config test (config.json)</p>
+<pre><code class="lang-javascript">{
+  <span class="hljs-string">"lint"</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-string">"postcss-reporter"</span>: {
+    <span class="hljs-string">"plugins"</span>: [<span class="hljs-string">"stylelint"</span>, <span class="hljs-string">"postcss-bem-linter"</span>],
+    <span class="hljs-string">"throwError"</span>: <span class="hljs-literal">true</span>
+  }
+}
+</code></pre>
+<pre><code>npm run build-test
+</code></pre></section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-27">
+        <div data-id="27" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="vue-tips">Vue Tips</h1>
+<h2 id="-http-www-vuemastery-com">👉 <a href="http://www.vuemastery.com">http://www.vuemastery.com</a></h2>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.lazy</span>=<span class="hljs-string">"..."</span> /&gt;</span>
+// Sincroniza el model solo en el evento `change` no con el evento `input`
+
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.number</span>=<span class="hljs-string">"..."</span> /&gt;</span>
+// Siempre devuelve un numero
+
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.trim</span>=<span class="hljs-string">"..."</span> /&gt;</span>
+// Remueve los espacio en blanco
+
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> @<span class="hljs-attr">submit.prevent</span>=<span class="hljs-string">"foo()"</span>&gt;</span>...
+Prevenir que la pagina recarge
+
+<span class="hljs-tag">&lt;<span class="hljs-name">img</span> @<span class="hljs-attr">mouseover.once</span>=<span class="hljs-string">"showImage"</span>&gt;</span>
+Solo gatilla una vez
+</code></pre>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden" id="slide-28">
+        <div data-id="28" class="slide-overlay"></div>
+        <section class="slide-content"><h1 id="gracias-">Gracias ❤️</h1>
+</section>
+      </div>
+    </div>
+    <div class="slide-wrapper">
+      <div class="slide hidden author-slide" id="slide-29">
+        <div data-id="29" class="slide-overlay"></div>
+        <section class="slide-content"><div class="author">
+  <h1 class="name">Raúl Hernández</h1>
+    <h3 class="twitter">
+      <a href="http://twitter.com/@raulghm">@raulghm</a>
+    </h3>
+    <h3 class="url">
+      <a href="https://github.com/raulghm">https://github.com/raulghm</a>
+    </h3>
+</div>
+</section>
+      </div>
+    </div>
+</div>
+
+  <div class="controls">
+    <div class="arrow prev"></div>
+    <div class="overview">☷</div>
+    <div class="arrow next"></div>
+  </div>
+
+
+  <script type="text/javascript">
+    /**
+ * Returns the current page number of the presentation.
+ */
+function currentPosition() {
+  return parseInt(document.querySelector('.slide:not(.hidden)').id.slice(6));
+}
+
+/**
+ * Navigates forward n pages
+ * If n is negative, we will navigate in reverse
+ */
+function navigate(n) {
+  var position = currentPosition();
+  var numSlides = document.getElementsByClassName('slide').length;
+
+  var $fragments = document.querySelectorAll('#slide-' + position + ' .fragment');
+  var fragmentsFinished = false;
+  if ($fragments.length) {
+    if (n > 0) {
+      var $f = document.querySelectorAll('#slide-' + position + ' .fragment.hidden');
+      if (!$f.length) fragmentsFinished = true;
+      else $f[0].classList.remove('hidden');
+    } else {
+      var $f = document.querySelectorAll('#slide-' + position + ' .fragment:not(.hidden)');
+      if (!$f.length) fragmentsFinished = true;
+      else $f[$f.length - 1].classList.add('hidden');
+    }
+  } else {
+    fragmentsFinished = true;
+  }
+
+  if (fragmentsFinished) {
+    /* Positions are 1-indexed, so we need to add and subtract 1 */
+    var nextPosition = (position - 1 + n) % numSlides + 1;
+
+    /* Normalize nextPosition in-case of a negative modulo result */
+    nextPosition = (nextPosition - 1 + numSlides) % numSlides + 1;
+
+    document.getElementById('slide-' + position).classList.add('hidden');
+    document.getElementById('slide-' + nextPosition).classList.remove('hidden');
+
+    updateProgress();
+    updateURL();
+    updateTabIndex();
+  }
+
+}
+
+/**
+ * Updates the current URL to include a hashtag of the current page number.
+ */
+function updateURL() {
+  try {
+    window.history.replaceState({}, null, '#' + currentPosition());
+  } catch (e) {
+    window.location.hash = currentPosition();
+  }
+}
+
+/**
+ * Sets the progress indicator.
+ */
+function updateProgress() {
+  var progressBar = document.querySelector('.progress-bar');
+
+  if (progressBar !== null) {
+    var numSlides = document.getElementsByClassName('slide').length;
+    var position = currentPosition() - 1;
+    var percent = (numSlides === 1) ? 100 : 100 * position / (numSlides - 1);
+    progressBar.style.width = percent.toString() + '%';
+  }
+}
+
+/**
+ * Removes tabindex property from all links on the current slide, sets
+ * tabindex = -1 for all links on other slides. Prevents slides from appearing
+ * out of control.
+ */
+function updateTabIndex() {
+  var allLinks = document.querySelectorAll('.slide a');
+  var position = currentPosition();
+  var currentPageLinks = document.getElementById('slide-' + position).querySelectorAll('a');
+  var i;
+
+  for (i = 0; i < allLinks.length; i++) {
+    allLinks[i].setAttribute('tabindex', -1);
+  }
+
+  for (i = 0; i < currentPageLinks.length; i++) {
+    currentPageLinks[i].removeAttribute('tabindex');
+  }
+}
+
+/**
+ * Determines whether or not we are currently in full screen mode
+ */
+function isFullScreen() {
+  return document.fullscreenElement ||
+    document.mozFullScreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement;
+}
+
+/**
+ * Toggle fullScreen mode on document element.
+ * Works on chrome (>= 15), firefox (>= 9), ie (>= 11), opera(>= 12.1), safari (>= 5).
+ */
+function toggleFullScreen() {
+  /* Convenient renames */
+  var docElem = document.documentElement;
+  var doc = document;
+
+  docElem.requestFullscreen =
+    docElem.requestFullscreen ||
+    docElem.msRequestFullscreen ||
+    docElem.mozRequestFullScreen ||
+    docElem.webkitRequestFullscreen.bind(docElem, Element.ALLOW_KEYBOARD_INPUT);
+
+  doc.exitFullscreen =
+    doc.exitFullscreen ||
+    doc.msExitFullscreen ||
+    doc.mozCancelFullScreen ||
+    doc.webkitExitFullscreen;
+
+  isFullScreen() ? doc.exitFullscreen() : docElem.requestFullscreen();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Update the tabindex to prevent weird slide transitioning
+  updateTabIndex();
+
+  // If the location hash specifies a page number, go to it.
+  var page = window.location.hash.slice(1);
+  if (page) {
+    navigate(parseInt(page) - 1);
+  }
+
+  document.onkeydown = function(e) {
+    if(e.target.tagName.toLowerCase() === 'textarea') return;
+    var kc = e.keyCode;
+
+    // left, down, H, J, backspace, PgUp - BACK
+    // up, right, K, L, space, PgDn - FORWARD
+    // enter - FULLSCREEN
+    if (kc === 37 || kc === 40 || kc === 8 || kc === 72 || kc === 74 || kc === 33) {
+      navigate(-1);
+    } else if (kc === 38 || kc === 39 || kc === 32 || kc === 75 || kc === 76 || kc === 34) {
+      navigate(1);
+    } else if (kc === 13) {
+      toggleFullScreen();
+    } else if (kc === 27) {
+      toggleOverview();
+    }
+  };
+
+  if (document.querySelector('.next') && document.querySelector('.prev')) {
+    document.querySelector('.next').onclick = function(e) {
+      e.preventDefault();
+      navigate(1);
+    };
+
+    document.querySelector('.prev').onclick = function(e) {
+      e.preventDefault();
+      navigate(-1);
+    };
+  }
+  if (document.querySelector('.overview')) {
+    document.querySelector('.overview').onclick = function(e) {
+      toggleOverview();
+    }
+  }
+  var $overlays = document.querySelectorAll('.slide-overlay');
+  [].forEach.call($overlays, function($overlay) {
+    $overlay.onclick = function(event) {
+      navigate(parseInt(event.target.dataset.id) - currentPosition());
+      toggleOverview();
+    }
+  });
+
+  var $fragments = document.querySelectorAll('.fragment');
+  [].forEach.call($fragments, function($fragment) {
+    $fragment.classList.add('hidden');
+  });
+
+});
+
+function toggleOverview() {
+  if (window.$style !== undefined) {
+    window.$style.remove();
+    delete window.$style;
+    document.querySelector('.slides').classList.remove('active');
+  } else {
+    var $slides = document.querySelector('.slides');
+    $slides.classList.add('active');
+    var slidesList = document.querySelectorAll('.slide-wrapper');
+
+    var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.getElementsByTagName('body')[0],
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight || e.clientHeight || g.clientHeight;
+
+    window.$style = document.createElement('style');
+    window.$style.innerHTML = '.slide-wrapper {width: ' + (x * 0.25) + 'px; height: ' + (y * 0.25) + 'px; } body .slide {width: ' + x + 'px; height: ' + y + 'px; position: relative; transform: scale(0.25,0.25); transform-origin: 0 0; } .slide.hidden{display: block; }';
+
+    document.getElementsByTagName('head')[0].appendChild(window.$style);
+  }
+}
+
+/**
+ * NEW BUBBLES
+ */
+// var canvas = document.getElementById('bubbling');
+var slide1 = document.getElementById("slide-1")
+var canvas = document.createElement("canvas");
+canvas.id = "bubbling";
+slide1.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+var particles = [];
+var particleCount = 280;
+
+for (var i = 0; i < particleCount; i++) {
+  particles.push(new particle());
+}
+
+function particle() {
+  this.x = Math.random() * canvas.width;
+  this.y = canvas.height + Math.random() * 300;
+  this.speed = .5 + Math.random();
+  this.radius = Math.random() * 3;
+  this.opacity = (Math.random() * 300) / 1000;
+}
+
+function loopBubbles() {
+  requestAnimationFrame(loopBubbles);
+  draw();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.globalCompositeOperation = 'lighter';
+  for (var i = 0; i < particles.length; i++) {
+    var p = particles[i];
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(255,255,255,' + p.opacity + ')';
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+    ctx.fill();
+    p.y -= p.speed;
+    if (p.y <= -10)
+      particles[i] = new particle();
+  }
+}
+
+// start bubbles
+loopBubbles();
+  </script>
+</body>
+</html>

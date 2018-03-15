@@ -1,0 +1,21 @@
+{
+  "name": "beerjs-santiago-slides",
+  "version": "0.1.0",
+  "description": "BeerJS",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cleaver watch index.md --output index.html",
+    "build": "cleaver index.md",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raulghm/beerjs-santiago-slides-33.git"
+  },
+  "keywords": [],
+  "author": "Raul Hernandez <raulghm@gmail.com> (https://github.com/raulghm)",
+  "license": "MIT",
+  "devDependencies": {
+    "cleaver": "^0.8.7"
+  }
+}
