@@ -16,7 +16,6 @@ theme: juanbrujo/cleaver-beerjs
 --
 
 <img src="img/me.png" alt="me">
-```
 
 --
 
